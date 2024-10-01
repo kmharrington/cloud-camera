@@ -4,41 +4,12 @@ import time
 import subprocess 
 import datetime as dt
 import gphoto2 as gp
-
-def kill_monitor():
-    out = subprocess.run(["ps", "aux"], capture_output=True)
-    lines = str(out.stdout).split("\\n")
-    monitor = []
-    for line in lines:
-        if "gvfs-gphoto2-volume-monitor" in line:
-            monitor.append(line)
-        if "gvfsd-gphoto2" in line:
-            monitor.append(line)
-    if len(monitor) == 0:
-        print("found no monitor task")
-        return
-    for m in monitor:
-        print(f"Killing: {m}")
-        proc_num = m.split()[1]
-        subprocess.run(["kill", "-9", proc_num])
-
-camera = gp.Camera()
+from camera import CloudCamera
 
 
-try:
-	camera.init()
-except gp.GPhoto2Error as e:
-    if e.code != -53:
-        print("I do not recognize this error")
-        print(e)
-        sys.exit()
-    kill_monitor()
-    time.sleep(2)
-    camera.init()
 
-cfg = camera.get_config()
-cfg.get_child_by_name('imageformat').set_value('RAW')
-camera.set_config(cfg)
+camera = CloudCamera()
+camera.set_image_format('RAW')
 
 wait_time = 10
 npix = int( (60/wait_time)*24*5 )
@@ -47,14 +18,9 @@ if not os.path.exists('tmp'):
 	os.makedirs('tmp')
 
 for i in range(npix):
-	print('Capturing image')
-	file_path = camera.capture(gp.GP_CAPTURE_IMAGE)
-	ext = file_path.name.split('.')[-1]
+    print('Capturing image')
+    target = os.path.join('tmp', f"{dt.datetime.now().isoformat()}" )
+    target = target.split(".")[0]
+    camera.take_photo(target)
 
-	target = os.path.join('tmp', f"{dt.datetime.now().isoformat()}.{ext}" )
-	camera_file = camera.file_get(
-		file_path.folder, file_path.name, gp.GP_FILE_TYPE_NORMAL
-	)
-	camera_file.save(target)
-
-	time.sleep(wait_time*60)
+    time.sleep(wait_time*60)
