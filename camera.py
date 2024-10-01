@@ -54,7 +54,7 @@ class CloudCamera:
         file_path = self.camera.capture(gp.GP_CAPTURE_IMAGE)
         ext = file_path.name.split('.')[-1] 
         assert "." not in path, "path should not include extension"
-        path += f".ext"
+        path += f".{ext}"
         camera_file = self.camera.file_get(
             file_path.folder, file_path.name, gp.GP_FILE_TYPE_NORMAL
         )
