@@ -12,7 +12,7 @@ camera = CloudCamera()
 camera.set_image_format('RAW')
 
 wait_time = 10
-npix = int( (60/wait_time)*24*5 )
+npix = int( (60/wait_time)*24*7 )
 
 if not os.path.exists('tmp'):
 	os.makedirs('tmp')
