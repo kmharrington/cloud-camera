@@ -63,7 +63,7 @@ class CloudCamera:
 
         def recurse_cfgs(child, parent):
             try:
-                cs = child.get_choices()
+                cs = [c for c in child.get_choices()]
             except:
                 cs = []
             name = child.get_name()
@@ -91,7 +91,8 @@ class CloudCamera:
         1/250,1/320,1/400,1/500,1/640,1/800,1/1000,1/1250,1/1600,1/2000,1/2500,1/3200,1/4000
         """
         cfg = self.camera.get_config()
-        cfg.get_child_by_name('shutterspeed').set_value(speed)
+        x = cfg.get_child_by_name('shutterspeed')
+        x.set_value(speed)
         self.camera.set_config(cfg)
         
     def set_image_format(self, fmt):
@@ -100,7 +101,8 @@ class CloudCamera:
         assert fmt in FORMATS
 
         cfg = self.camera.get_config()
-        cfg.get_child_by_name('imageformat').set_value(fmt)
+        x = cfg.get_child_by_name('imageformat')
+        x.set_value(fmt)
         self.camera.set_config(cfg)
 
     def take_photo(self, path):
