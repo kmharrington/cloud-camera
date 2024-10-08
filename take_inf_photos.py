@@ -7,7 +7,6 @@ import gphoto2 as gp
 from camera import CloudCamera
 
 
-
 camera = CloudCamera()
 camera.set_image_format('RAW')
 
@@ -17,14 +16,9 @@ if not os.path.exists('tmp'):
 	os.makedirs('tmp')
 
 while True:
-    try:
-        print('Capturing image')
-        target = os.path.join('tmp', f"{dt.datetime.now().isoformat()}" )
-        target = target.split(".")[0]
-        camera.take_photo(target)
-    except:
-        print("failed to capture image")
-        camera.exit()
-        camera = CloudCamera()
+    print('Capturing image')
+    target = os.path.join('tmp', f"{dt.datetime.now().isoformat()}" )
+    target = target.split(".")[0]
+    camera.take_photo(target)
 
     time.sleep(wait_time*60)

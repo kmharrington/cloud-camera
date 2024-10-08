@@ -22,11 +22,22 @@ def kill_monitor():
         proc_num = m.split()[1]
         subprocess.run(["kill", "-9", proc_num])
 
+FORMATS = [
+    'RAW', 
+    'Small Fine JPEG',
+    'Medium Fine JPEG',
+    'Large Fine JPEG',
+]
+    
 class CloudCamera:
     def __init__(self):
+        self.configs = None
+        self.camera = None
+        
         self.connect()
         if self.camera is None:
             print("Failed to connect to camera")
+            
     def connect(self):
         self.camera = gp.Camera()
 
@@ -43,19 +54,67 @@ class CloudCamera:
             self.camera.init()
         return self.camera
 
+    def get_configs(self):
+        """ Recurse through the camera configuration to build an info dump in a dictionary
+        """
+        cfg = self.camera.get_config()
+        if self.configs is None:
+            self.configs = {}
+
+        def recurse_cfgs(child, parent):
+            try:
+                cs = child.get_choices()
+            except:
+                cs = []
+            name = child.get_name()
+            parent[name] = {}
+            
+            if len(cs) > 0:
+                parent[name]['choices'] = cs
+            try:        
+                parent[name]['value'] = child.get_value()
+            except:
+                pass
+            for grandchild in child.get_children():
+                recurse_cfgs( grandchild, parent[name])
+                
+        recurse_cfgs(cfg, self.configs)
+        return self.configs
+
+    def get_shutterspeed(self):
+        cfg = self.camera.get_config()
+        return cfg.get_child_by_name('shutterspeed').get_value()
+        
+    def set_shutterspeed(self, speed):
+        """30,25,20,15,13,10.3,8,6.3,5,4,3.2,2.5,2,1.6,1.3,1,0.8,0.6,0.5,0.4,0.3,1/4,1/5,
+        1/6,1/8,1/10,1/13,1/15,1/20,1/25,1/30,1/40,1/50,1/60,1/80,1/100,1/125,1/160,1/200,
+        1/250,1/320,1/400,1/500,1/640,1/800,1/1000,1/1250,1/1600,1/2000,1/2500,1/3200,1/4000
+        """
+        cfg = self.camera.get_config()
+        cfg.get_child_by_name('shutterspeed').set_value(speed)
+        self.camera.set_config(cfg)
+        
     def set_image_format(self, fmt):
-        assert fmt in ['RAW', 'Small Fine JPEG']
+        """TODO: pull choices from self.configs
+        """
+        assert fmt in FORMATS
 
         cfg = self.camera.get_config()
         cfg.get_child_by_name('imageformat').set_value(fmt)
         self.camera.set_config(cfg)
 
     def take_photo(self, path):
-        file_path = self.camera.capture(gp.GP_CAPTURE_IMAGE)
-        ext = file_path.name.split('.')[-1] 
-        assert "." not in path, "path should not include extension"
-        path += f".{ext}"
-        camera_file = self.camera.file_get(
-            file_path.folder, file_path.name, gp.GP_FILE_TYPE_NORMAL
-        )
-        camera_file.save(path) 
+        try:
+            file_path = self.camera.capture(gp.GP_CAPTURE_IMAGE)
+            ext = file_path.name.split('.')[-1] 
+            assert "." not in path, "path should not include extension"
+            path += f".{ext}"
+            camera_file = self.camera.file_get(
+                file_path.folder, file_path.name, gp.GP_FILE_TYPE_NORMAL
+            )
+            camera_file.save(path) 
+        except Exception as e:
+            self.camera.exit()
+            time.sleep(1)
+            self.connect()
+            print(e)
