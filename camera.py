@@ -16,6 +16,9 @@ def kill_monitor():
             monitor.append(line)
     if len(monitor) == 0:
         print("found no monitor task")
+        for line in lines:
+            if 'gphoto2' in line:
+                print(line)
         return
     for m in monitor:
         print(f"Killing: {m}")

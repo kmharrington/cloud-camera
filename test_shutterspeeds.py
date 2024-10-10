@@ -7,11 +7,10 @@ import gphoto2 as gp
 from camera import CloudCamera
 
 speeds_to_test_night = [
-    '30','20','10','5','2.5','1','0.5','1/4', '1/8', '1/15', '1/30', '1/60', '1/125'
+    '20','10','5','2.5','1','0.5','1/4', '1/8', '1/15', '1/30', '1/60', '1/125'
 ]
 speeds_to_test_day = [
-    '1/125','1/250','1/320','1/400','1/500','1/640','1/800','1/1000',
-    '1/1250','1/1600','1/2000',
+    '1/125','1/250','1/500','1/1000','1/2000',
 ]
 camera = CloudCamera()
 camera.set_image_format('Medium Fine JPEG')
@@ -25,7 +24,7 @@ def shutter_test(speeds):
     print("Beginning Shutter Speed Testing")
     ori_speed = camera.get_shutterspeed()
     print(f"We were originally set to {ori_speed}")
-    for speed in speeds_to_test_day:
+    for speed in speeds:
         print(f"Try speed {speed}")
         camera.set_shutterspeed(speed)
         target = os.path.join('tmp', f"{dt.datetime.now().isoformat()}" )
