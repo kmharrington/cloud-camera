@@ -2,6 +2,7 @@ import os
 import sys
 import time
 import subprocess 
+import numpy as np
 import datetime as dt
 import gphoto2 as gp
 import ephem
