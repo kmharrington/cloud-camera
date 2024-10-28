@@ -1,9 +1,21 @@
 import os
 import sys
 import time
+import logging
 import subprocess 
 import datetime as dt
 import gphoto2 as gp
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    handlers=[
+        logging.FileHandler("debug.log"),
+        logging.StreamHandler()
+    ]
+)
+
+logger = logging.getLogger()
 
 def kill_monitor():
     out = subprocess.run(["ps", "aux"], capture_output=True)
@@ -15,13 +27,13 @@ def kill_monitor():
         if "gvfsd-gphoto2" in line:
             monitor.append(line)
     if len(monitor) == 0:
-        print("found no monitor task")
+        logger.info("found no monitor task")
         for line in lines:
             if 'gphoto2' in line:
-                print(line)
+                logger.info(line)
         return
     for m in monitor:
-        print(f"Killing: {m}")
+        logger.info(f"Killing: {m}")
         proc_num = m.split()[1]
         subprocess.run(["kill", "-9", proc_num])
 
@@ -39,7 +51,7 @@ class CloudCamera:
         
         self.connect()
         if self.camera is None:
-            print("Failed to connect to camera")
+            logger.error("Failed to connect to camera")
             
     def connect(self):
         self.camera = gp.Camera()
@@ -48,8 +60,8 @@ class CloudCamera:
 	        self.camera.init()
         except gp.GPhoto2Error as e:
             if e.code != -53:
-                print("I do not recognize this error")
-                print(e)
+                logger.error("I do not recognize this error")
+                logger.error(e)
                 self.camera = None
                 return None
             kill_monitor()
@@ -122,4 +134,4 @@ class CloudCamera:
             self.camera.exit()
             time.sleep(1)
             self.connect()
-            print(e)
+            logger.error(e)
