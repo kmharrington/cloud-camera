@@ -10,8 +10,8 @@ from camera import CloudCamera, logger
 
 
 site = ephem.Observer()
-site.lat = "-87.979537"
-site.long = "41.716144"
+site.long = "-87.979537"
+site.lat = "41.716144"
 site.elev = 225 #meters, about
 
 
@@ -32,12 +32,12 @@ while True:
     else:
         #daytime
         speed = '1/500'    
-        
     camera.set_shutterspeed(speed)
     target = os.path.join('tmp', f"{dt.datetime.now().isoformat()}" )
     target = target.split(".")[0]
     x = speed.replace("/", "d").replace(".", "p")
     target = f"{target}_s_{x}"
+    print(site.date, sun_el, speed, target)        
     
     camera.take_photo(target)
 
