@@ -25,10 +25,12 @@ while True:
     site.date  = ephem.Date(dt.datetime.now())
     sun = ephem.Sun(site)
     sun_el = np.degrees(sun.alt)
-
-    if sun_el < 0:
+    
+    if sun_el < -10:
+        speed= '10'
+    elif sun_el < 0:
         #nighttime
-        speed = '10'
+        speed = '1'
     else:
         #daytime
         speed = '1/500'    
