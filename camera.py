@@ -55,9 +55,9 @@ class CloudCamera:
             
     def connect(self):
         self.camera = gp.Camera()
-
+        
         try:
-	        self.camera.init()
+            self.camera.init()
         except gp.GPhoto2Error as e:
             if e.code != -53:
                 logger.error("I do not recognize this error")
