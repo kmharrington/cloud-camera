@@ -37,6 +37,24 @@ def kill_monitor():
         proc_num = m.split()[1]
         subprocess.run(["kill", "-9", proc_num])
 
+def get_file_from_now(shutter_speed=None, basedir='tmp'):
+        """get file from the current time. creates 5 digit ctime 
+        folders for the files as well 
+        """
+        now = int(time.time())
+        dir = str(now)[:5]
+
+        target = os.path.join(basedir, dir )
+        if not os.path.exists(target):
+            os.mkdir(target)
+        target = os.path.join(target, now)
+
+        if shutter_speed is not None:
+            x = shutter_speed.replace("/", "d").replace(".", "p")
+            target = f"{target}_s_{x}"
+
+        return target
+
 FORMATS = [
     'RAW', 
     'Small Fine JPEG',

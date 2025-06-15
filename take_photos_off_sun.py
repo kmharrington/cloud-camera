@@ -4,24 +4,7 @@ import numpy as np
 import datetime as dt
 import gphoto2 as gp
 import ephem
-from camera import CloudCamera, logger
-
-def get_file_from_now(shutter_speed, basedir='tmp'):
-    """get file from the current time. creates 5 digit ctime 
-    folders for the files as well 
-    """
-    now = int(time.time())
-    dir = str(now)[:5]
-
-    target = os.path.join(basedir, dir )
-    if not os.path.exists(target):
-        os.mkdir(target)
-    target = os.path.join(target, now)
-
-    x = shutter_speed.replace("/", "d").replace(".", "p")
-    target = f"{target}_s_{x}"
-
-    return target
+from camera import CloudCamera, logger, get_file_from_now
 
 site = ephem.Observer()
 site.long = "-67.787925"
@@ -50,7 +33,7 @@ while True:
     camera.set_shutterspeed(speed)
     target = get_file_from_now(speed)
     
-    print(site.date, sun_el, speed, target)        
+    print(site.date, sun_el, speed, target)
     camera.take_photo(target)
 
     time.sleep(wait_time*60)

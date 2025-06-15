@@ -1,26 +1,34 @@
 import os
-import sys
 import time
-import subprocess 
-import datetime as dt
-import gphoto2 as gp
-from camera import CloudCamera
+import argparse
+from camera import CloudCamera, get_file_from_now
 
+def get_parser(parser=None):
+    if parser is None:
+        parser = argparse.ArgumentParser()
+    parser.add_argument(
+        'n', default=1, type=int, 
+        help="Number of photos to take"
+    )
+    parser.add_argument(
+        'wait', default=10, type=float,
+        help="Seconds (>1) to wait between images"
+    )
 
+if __name__== "__main__":
+    parser = get_parser(parser=None)
+    args = parser.parse_args()
 
-camera = CloudCamera()
-camera.set_image_format('RAW')
+    if args.wait < 1:
+        raise ValueError("wait time needs to be more than one second")
 
-wait_time = 10
-npix = int( (60/wait_time)*24*7 )
+    camera = CloudCamera()
+    camera.set_image_format('Medium Fine JPEG')
 
-if not os.path.exists('tmp'):
-	os.makedirs('tmp')
+    wait_time = args.wait
 
-for i in range(npix):
-    print('Capturing image')
-    target = os.path.join('tmp', f"{dt.datetime.now().isoformat()}" )
-    target = target.split(".")[0]
-    camera.take_photo(target)
-
-    time.sleep(wait_time*60)
+    for i in range(args.n):
+        print('Capturing image')
+        target = get_file_from_now()
+        camera.take_photo(target)
+        time.sleep(wait_time)
