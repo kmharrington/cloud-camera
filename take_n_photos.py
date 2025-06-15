@@ -7,12 +7,16 @@ def get_parser(parser=None):
     if parser is None:
         parser = argparse.ArgumentParser()
     parser.add_argument(
-        'n', default=1, type=int, 
+        '--n', default=1, type=int, 
         help="Number of photos to take"
     )
     parser.add_argument(
-        'wait', default=10, type=float,
+        '--wait', default=10, type=float,
         help="Seconds (>1) to wait between images"
+    )
+    parser.add_argument(
+        '--shutter-speed', default='1/500', type=str,
+        help="Shutter Speed to use:"
     )
 
 if __name__== "__main__":
@@ -24,6 +28,7 @@ if __name__== "__main__":
 
     camera = CloudCamera()
     camera.set_image_format('Medium Fine JPEG')
+    camera.set_shutterspeed(args.shutter_speed)
 
     wait_time = args.wait
 
