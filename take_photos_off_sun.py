@@ -1,10 +1,8 @@
-import os
 import time
 import numpy as np
 import datetime as dt
-import gphoto2 as gp
 import ephem
-from camera import CloudCamera, logger, get_file_from_now
+from camera import CloudCamera, get_file_from_now
 
 site = ephem.Observer()
 site.long = "-67.787925"

@@ -153,3 +153,6 @@ class CloudCamera:
             time.sleep(1)
             self.connect()
             logger.error(e)
+
+if __name__ == "__main__":
+    camera = CloudCamera()

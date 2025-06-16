@@ -13,7 +13,7 @@ speeds_to_test_day = [
     '1/125','1/500','1/1000','1/2000',
 ]
 camera = CloudCamera()
-camera.set_image_format('RAW')
+camera.set_image_format('Medium Fine JPEG')
 
 wait_time = 30
 
