@@ -148,10 +148,14 @@ def main(args=None):
 
     # Start logging
     txaio.start_logging(level=environ.get("LOGLEVEL", "info"))
-
-    args = site_config.parse_args(agent_class='CloudCameraAgent', args=args)
+    
+    parser = add_agent_args()
+    args = site_config.parse_args(
+        agent_class='CloudCameraAgent', 
+        parser=parser, args=args
+    )
     agent, runner = ocs_agent.init_site_agent(args)
-    camera = CloudCameraAgent(agent)
+    camera = CloudCameraAgent(agent, args.save_dir)
     agent.register_process(
         'take_photos_off_sun',
         camera.take_photos_off_sun,
