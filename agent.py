@@ -81,7 +81,6 @@ class CloudCameraAgent:
         **Process** - take photos with the camera where the shutter speed is
         set by the current elevation of the sun
 
-        TODO: make all these hardcoded numbers not hardcoded
         """
         with self.lock.acquire_timeout(job='photos-off-sun') as acquired:
             if not acquired:
