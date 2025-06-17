@@ -20,13 +20,16 @@ while True:
     
     if sun_el < -10:
         #nighttime
-        speed= '10'
+        #speed='10'
+        speed= '5'
     elif sun_el < 0:
         #dusk
-        speed = '1'
+        #speed = '1'
+        speed = '0.5'
     else:
         #daytime
-        speed = '1/500'  
+        #speed = '1/500'  
+        speed = '1/1000'  
 
     camera.set_shutterspeed(speed)
     target = get_file_from_now(speed)

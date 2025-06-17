@@ -18,6 +18,7 @@ def get_parser(parser=None):
         '--shutter-speed', default='1/500', type=str,
         help="Shutter Speed to use:"
     )
+    return parser
 
 if __name__== "__main__":
     parser = get_parser(parser=None)
@@ -34,8 +35,6 @@ if __name__== "__main__":
 
     for i in range(args.n):
         print('Capturing image')
-        target = get_file_from_now(
-            shutter_speed=args.shutter_speed
-        )
+        target = get_file_from_now(args.shutter_speed)
         camera.take_photo(target)
         time.sleep(wait_time)

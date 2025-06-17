@@ -41,8 +41,8 @@ def get_file_from_now(shutter_speed=None, basedir='tmp'):
         """get file from the current time. creates 5 digit ctime 
         folders for the files as well 
         """
-        now = int(time.time())
-        dir = str(now)[:5]
+        now = str(int(time.time()))
+        dir = now[:5]
 
         target = os.path.join(basedir, dir )
         if not os.path.exists(target):
